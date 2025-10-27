@@ -3,9 +3,13 @@ import os
 
 from config.settings import BASE_URL, DATA_DIR
 from utils.yaml_utils import YamlUtils
+from base.logger import logger
 
 # 读取YAML测试数据
 test_data_raw = YamlUtils.read_yaml(os.path.join(DATA_DIR, "test_cases.yaml"))
+
+# 过滤掉 None 值（防止 YAML 文件末尾的空列表项导致错误）
+test_data_raw = [case for case in (test_data_raw or []) if case is not None]
 
 
 @pytest.mark.api
@@ -25,10 +29,10 @@ def test_create_user(case_raw):
     # 拼接完整URL
     full_url = f"{BASE_URL}{case['url']}"
 
-    # 打印测试用例信息
-    print(f"\n执行测试用例 {case['case_id']}: {case['description']}")
-    print(f"请求URL: {full_url}")
-    print(f"请求数据: {case['request_data']}")
+    # 使用logger输出测试用例信息
+    logger.info(f"执行测试用例 {case['case_id']}: {case['description']}")
+    logger.info(f"请求URL: {full_url}")
+    logger.info(f"请求数据: {case['request_data']}")
 
     # 发送请求
     response = req_handler._send_request(
@@ -38,13 +42,13 @@ def test_create_user(case_raw):
         json=case['request_data']  # 使用json参数自动处理Content-Type
     )
 
-    # 打印响应状态码和内容，便于调试
-    print(f"响应状态码: {response.status_code}")
+    # 使用logger输出响应信息
+    logger.info(f"响应状态码: {response.status_code}")
     try:
         response_json = response.json()
-        print(f"响应内容: {response_json}")
+        logger.info(f"响应内容: {response_json}")
     except Exception:
-        print(f"响应内容(非JSON): {response.text}")
+        logger.info(f"响应内容(非JSON): {response.text}")
 
     # 断言HTTP状态码
     assert_handler.assert_status_code(response, case['expected_http_code'])
@@ -65,4 +69,4 @@ def test_create_user(case_raw):
         if case['expected_response'] != {}:
             assert_handler.assert_response_content(response_json, case['expected_response'], assert_handler)
 
-    print(f"测试用例 {case['case_id']} 执行成功")
+    logger.info(f"测试用例 {case['case_id']} 执行成功")

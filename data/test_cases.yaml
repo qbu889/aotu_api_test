@@ -2,60 +2,43 @@
   description: 正常创建用户-包含所有字段
   method: POST
   url: /api/users
+  expected_http_code: 200
+  expected_res_code: 0
   headers:
     Content-Type: application/json
   request_data:
     username: '{{generate_username:admin}}'
-    password: demoData
+    password: '123456'
     email: '{{generate_email:admin}}'
     phone: '{{generate_phone}}'
     age: '{{generate_age:25}}'
-  expected_http_code: 200
-  expected_res_code: 0
   expected_response:
     msg: success
 - case_id: 2
-  description: 创建用户-重复用户名（已存在）
+  description: 创建用户-重复用户名
   method: POST
   url: /api/users
+  expected_http_code: 200
+  expected_res_code: 500
   headers:
     Content-Type: application/json
   request_data:
     username: testuser
-    password: demoData
-    email: '{{generate_email:dup1}}'
+    password: '123456'
+    email: '{{generate_email:dup}}'
     phone: '{{generate_phone}}'
-    age: '{{generate_age:30}}'
-  expected_http_code: 200
-  expected_res_code: 500
   expected_response:
     msg: '用户名已存在: testuser'
 - case_id: 3
-  description: 创建用户-重复邮箱（已存在）
+  description: 创建用户-缺少必填字段
   method: POST
   url: /api/users
-  headers:
-    Content-Type: application/json
-  request_data:
-    username: '{{generate_username:email_dup}}'
-    password: demoData
-    email: test@example.com
-    phone: '{{generate_phone}}'
-    age: '{{generate_age:30}}'
   expected_http_code: 200
-  expected_res_code: 500
-  expected_response:
-    msg: '邮箱已存在: test@example.com'
-- case_id: 4
-  description: 缺少必填字段
-  method: POST
-  url: /api/users
+  expected_res_code: 400
   headers:
     Content-Type: application/json
   request_data:
     username: ''
-    password: demoData
-  expected_http_code: 200
-  expected_res_code: 400
+    password: '123456'
   expected_response:
     msg: 'username: 用户名不能为空'

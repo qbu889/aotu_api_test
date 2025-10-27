@@ -6,9 +6,11 @@ class RequestBase:
     def __init__(self, base_url=None):
         self.base_url = base_url
         self.session = requests.Session()
-        self.headers = {
-            "Content-Type": "application/json"
-        }
+        # 默认不强行设置 Content-Type，交由上层或 requests 决定：
+        # - 使用 json= 时，requests 会自动设置 application/json
+        # - multipart/form-data 的 boundary 需由 requests 自动生成
+        # - form/text/xml 等根据调用方 headers 或请求体决定
+        self.headers = {}
 
     def set_base_url(self, base_url):
         """设置基础URL"""

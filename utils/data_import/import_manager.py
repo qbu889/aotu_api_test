@@ -23,17 +23,17 @@ class ImportManager:
         self,
         excel_path: str,
         strategy: str = 'skip',
-        backup: bool = True,
-        validate: bool = True
+        backup: bool = True
     ) -> Dict:
         """
         从Excel导入用例
+        
+        注意: Excel格式验证应在调用此方法前完成（如在 ExcelCaseLoader 中）
         
         Args:
             excel_path: Excel文件路径
             strategy: 合并策略 ('skip', 'replace', 'append')
             backup: 是否备份原YAML文件
-            validate: 是否验证Excel格式
         
         Returns:
             导入结果统计
@@ -47,15 +47,13 @@ class ImportManager:
         }
         
         try:
+            # 注意: Excel格式验证已在 ExcelCaseLoader 中完成
+            # 这里直接进行导入操作，不再重复验证
+            
             # 1. 创建Excel导入器
             importer = ExcelImporter(excel_path)
             
-            # 2. 验证格式
-            if validate and not importer.validate_format():
-                result['errors'].append('Excel格式验证失败')
-                return result
-            
-            # 3. 读取用例
+            # 2. 读取用例
             new_cases = importer.read_cases()
             result['total_count'] = len(new_cases)
             
@@ -63,21 +61,21 @@ class ImportManager:
                 result['errors'].append('没有读取到有效用例')
                 return result
             
-            # 4. 备份原文件
+            # 3. 备份原文件
             if backup:
                 backup_path = self.yaml_handler.backup()
                 if backup_path:
                     print(f"已备份原文件: {backup_path}")
             
-            # 5. 合并用例
+            # 4. 合并用例
             before_count = len(self.yaml_handler.read())
             merged_cases = self.yaml_handler.merge_cases(new_cases, strategy=strategy)
             after_count = len(merged_cases)
             
-            # 6. 写入YAML
+            # 5. 写入YAML
             self.yaml_handler.write(merged_cases)
             
-            # 7. 统计结果
+            # 6. 统计结果
             result['success'] = True
             result['imported_count'] = after_count - before_count
             result['skipped_count'] = result['total_count'] - result['imported_count']
@@ -152,7 +150,7 @@ class ImportManager:
             'total_skipped': total_skipped,
             'errors': errors
         }
-    
+        
     def get_yaml_info(self) -> Dict:
         """获取当前YAML文件信息"""
         return self.yaml_handler.get_statistics()

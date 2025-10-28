@@ -151,3 +151,30 @@ class Assertion:
                 return None
             else:
                 pytest.fail(f"响应解析JSON失败: {str(e)}")
+
+    @staticmethod
+    def assert_case(response, case):
+        """
+        聚合断言方法：统一执行测试用例的所有断言
+        :param response: HTTP响应对象
+        :param case: 测试用例字典，包含所有期望值
+        """
+        # 1. 断言HTTP状态码
+        Assertion.assert_status_code(response, case['expected_http_code'])
+
+        # 2. 解析响应数据
+        response_json = Assertion.handle_json_parsing(response, case['expected_http_code'])
+        if response_json is None:
+            return
+
+        # 3. 断言响应体中的业务状态码
+        if 'expected_res_code' in case:
+            Assertion.assert_response_code(response_json, case['expected_res_code'])
+
+        # 4. 断言响应内容
+        if 'expected_response' in case and case['expected_response']:
+            # 只有当期望响应不是空字典时才进行断言
+            if case['expected_response'] != {}:
+                # 创建一个临时的 Assertion 实例用于递归调用
+                assert_handler = Assertion()
+                Assertion.assert_response_content(response_json, case['expected_response'], assert_handler)

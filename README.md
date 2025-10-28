@@ -1,41 +1,15 @@
-# API 自动化测试框架# 自动化测试框架
-
-
-
-基于 PyTest 的 API 自动化测试框架，支持 YAML/Excel 数据驱动，内置日志、HTML 报告与 Excel 导入功能。一个基于 PyTest 的轻量级 API 自动化测试项目，支持用例以 YAML/Excel 维护，内置日志与 HTML 报告，开箱即用的 Excel→YAML 导入流程。
-
-
-
-
 # API 自动化测试框架
 
 基于 PyTest 的轻量级 API 自动化测试框架，支持 YAML/Excel 数据驱动，内置日志与 HTML 报告，提供可选的 Excel→YAML 导入流程。
 
-## 🚀 快速开始
-
-1) 安装依赖（建议在虚拟环境中）
-
-```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
-
-2) 可选配置 BASE_URL（也可改 `config/settings.py`）
-
-```powershell
-echo BASE_URL=http://localhost:8080 > .env
-```
-
-3) 运行测试
-
-```powershell
-# 自动导入 Excel 后执行测试（推荐）
+## 自动导入 Excel 后执行测试（推荐）
 python run.py -i
 
-# 交互式导入 + 执行
+## 交互式导入 + 执行
 python run.py
 
-# 指定导入策略
+## 指定导入策略
+```
 python run.py -i -s skip      # 跳过重复（默认）
 python run.py -i -s replace   # 覆盖重复
 python run.py -i -s append    # 直接追加
@@ -66,6 +40,7 @@ aotu_api_test/
 - 可选列（JSON 字段）：`headers`、`request_data`、`expected_response`
 
 JSON 字段必须是标准 JSON：
+- 目前项目已经支持自动化的格式检验，注意用例文件名称必须为：**test_case.xlsx**
 
 ```json
 // 正确
@@ -74,14 +49,6 @@ JSON 字段必须是标准 JSON：
 {name: 'test', age: 25,}
 ```
 
-导入前建议用脚本检查 JSON 格式：
-
-- 此时的用例文件名称必须是：**test_case.xlsx**
-- 详细解析数据并根据 **Content-Type** 验证格式
-
-```powershell
-python scripts/check_excel_json.py
-```
 
 ## 📦 Content-Type 支持
 
@@ -178,5 +145,44 @@ python scripts/check_excel_json.py
 
 ---
 
-最后更新：2025-10-27
+## 📝 更新日志
+
+### 2025-10-28 - v1.2.0
+**🎯 更新：集成 Excel 格式验证到导入流程**
+
+#### 一、新增功能
+- ✅ **自动格式验证**：在导入 Excel 用例前自动执行格式检查
+  - 集成 `ExcelJsonChecker` 到 `ExcelCaseLoader`
+  - 支持多种 Content-Type 格式验证（JSON、Form、Multipart、XML、Text）
+  - 详细的错误报告和修复建议
+  
+- ✅ **断言逻辑优化**：重构测试层断言
+  - 在 `base.assertion` 中新增 `assert_case()` 聚合方法
+  - 统一执行：状态码 → JSON解析 → 业务码 → 响应内容
+  - 测试代码从 127 行简化到 63 行
+
+- ✅ **请求参数自动处理**：封装 Content-Type 逻辑
+  - 在 `base.request` 中新增 `prepare_request_params()` 方法
+  - 自动识别并处理多种 Content-Type
+  - 支持不区分大小写的 header 键名
+
+#### 二、优化改进
+- 🔧 **移除重复验证**：删除 `ImportManager` 中的冗余格式检查
+  - 避免 `utils.excel_validator` 模块不存在的错误
+  - 职责更清晰：`ExcelCaseLoader` 负责验证，`ImportManager` 负责导入
+
+- 🚀 **导入流程优化**
+  ```
+  文件存在检查 → 格式验证 → 用户确认 → 数据导入 → 测试执行
+  ```
+  - 格式验证失败时立即退出（`sys.exit(1)`）
+  - 更清晰的进度提示和错误反馈
+
+#### 三、终端输出结果
+![结果1](TemplatesPhoto/1.png)
+
+![结果2](TemplatesPhoto/2.png)
+
+
+最后更新：2025-10-28
 

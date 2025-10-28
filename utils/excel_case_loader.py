@@ -3,6 +3,7 @@ Excel用例加载器模块
 
 职责:
 - 检测Excel用例文件
+- 格式验证 (集成 ExcelJsonChecker)
 - 提供交互式导入功能
 - 处理导入策略选择
 - 提供导入结果反馈
@@ -11,7 +12,7 @@ Excel用例加载器模块
 import os
 import sys
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 
 class ExcelCaseLoader:
@@ -71,38 +72,99 @@ class ExcelCaseLoader:
         
         return list(self.excel_dir.glob('*.xlsx'))
     
-    def prompt_user_for_import(self) -> bool:
+    def validate_excel_files(self) -> Dict[str, Any]:
         """
-        询问用户是否导入Excel用例
+        验证所有Excel文件的格式
         
         Returns:
-            bool: 用户选择导入返回True,否则返回False
+            Dict: 验证结果
+                {
+                    'all_valid': bool,
+                    'results': List[Dict],  # 每个文件的验证结果
+                    'valid_files': List[Path],
+                    'invalid_files': List[Path]
+                }
         """
         excel_files = self.get_excel_files()
         
         if not excel_files:
-            return False
+            return {
+                'all_valid': True,
+                'results': [],
+                'valid_files': [],
+                'invalid_files': []
+            }
         
         print("\n" + "="*60)
-        print("检测到Excel用例文件:")
-        for f in excel_files:
-            print(f"  - {f.name}")
+        print("📋 开始 Excel 格式验证...")
+        print("="*60)
         
-        try:
-            choice = input("\n是否导入Excel用例到YAML? (y/n, 默认y): ").strip().lower()
+        valid_files = []
+        invalid_files = []
+        results = []
+        
+        for excel_file in excel_files:
+            print(f"\n正在检查: {excel_file.name}")
+            print("-" * 60)
             
-            # 默认为'y'(导入)，只有明确输入'n'才跳过
-            if choice == 'n':
-                print("跳过Excel导入")
-                print("="*60 + "\n")
-                return False
-            
-            return True
-        except (EOFError, OSError):
-            # 无法获取输入时，自动导入（适配IDE运行）
-            print("\n检测到非交互式环境，自动导入Excel用例...")
-            print("="*60 + "\n")
-            return True
+            try:
+                # 导入 ExcelJsonChecker
+                from scripts.check_excel_json import ExcelJsonChecker
+                
+                # 创建检查器并运行检查
+                checker = ExcelJsonChecker(str(excel_file))
+                is_valid = checker.run_full_check()
+                
+                result = {
+                    'file': excel_file,
+                    'valid': is_valid,
+                    'errors': checker.errors,
+                    'warnings': checker.warnings
+                }
+                
+                results.append(result)
+                
+                if is_valid:
+                    valid_files.append(excel_file)
+                    print(f"✅ {excel_file.name} - 格式验证通过")
+                else:
+                    invalid_files.append(excel_file)
+                    print(f"❌ {excel_file.name} - 格式验证失败")
+                    
+            except ImportError as e:
+                print(f"⚠️  警告: 无法导入格式检查器: {e}")
+                print(f"   跳过 {excel_file.name} 的格式验证")
+                # 如果无法导入检查器，假定文件有效（向后兼容）
+                valid_files.append(excel_file)
+                results.append({
+                    'file': excel_file,
+                    'valid': True,
+                    'errors': [],
+                    'warnings': [f'格式检查器不可用: {e}']
+                })
+            except Exception as e:
+                print(f"❌ 检查 {excel_file.name} 时发生错误: {e}")
+                invalid_files.append(excel_file)
+                results.append({
+                    'file': excel_file,
+                    'valid': False,
+                    'errors': [str(e)],
+                    'warnings': []
+                })
+        
+        print("\n" + "="*60)
+        print(f"📊 验证汇总:")
+        print(f"   总文件数: {len(excel_files)}")
+        print(f"   ✅ 有效: {len(valid_files)}")
+        print(f"   ❌ 无效: {len(invalid_files)}")
+        print("="*60)
+        
+        return {
+            'all_valid': len(invalid_files) == 0,
+            'results': results,
+            'valid_files': valid_files,
+            'invalid_files': invalid_files
+        }
     
     def select_import_strategy(self) -> str:
         """
@@ -177,7 +239,7 @@ class ExcelCaseLoader:
     
     def check_and_import(self, auto_import: bool = False, strategy: Optional[str] = None) -> bool:
         """
-        检查并导入Excel用例 (完整流程)
+        检查并导入Excel用例 (完整流程: 存在性检查 → 格式验证 → 导入)
         
         Args:
             auto_import: 是否自动导入(True=自动, False=交互式)
@@ -190,7 +252,35 @@ class ExcelCaseLoader:
         if not self.has_excel_files():
             return True
         
-        # 2. 自动导入模式
+        # 2. 格式验证（关键步骤）
+        validation_result = self.validate_excel_files()
+        
+        # 2.1 如果格式验证失败，退出系统
+        if not validation_result['all_valid']:
+            print("\n" + "="*60)
+            print("❌ Excel 文件格式验证失败！")
+            print("="*60)
+            print("\n无效文件列表:")
+            for invalid_file in validation_result['invalid_files']:
+                print(f"  ❌ {invalid_file.name}")
+            
+            print("\n" + "="*60)
+            print("请修复上述文件中的格式错误后重试")
+            print("提示: 可以单独运行格式检查脚本:")
+            print("      python scripts/check_excel_json.py")
+            print("="*60)
+            
+            # 格式验证失败，退出系统
+            sys.exit(1)
+        
+        # 2.2 如果没有有效文件，提示并返回
+        if not validation_result['valid_files']:
+            print("\n⚠️  没有有效的Excel文件可以导入")
+            return True
+        
+        print(f"\n✅ 所有 Excel 文件格式验证通过！")
+        
+        # 3. 自动导入模式
         if auto_import:
             # 使用环境变量中的策略,或使用参数指定的策略
             if strategy is None:
@@ -198,10 +288,9 @@ class ExcelCaseLoader:
             
             print("\n" + "="*60)
             print("Excel用例自动导入模式")
-            excel_files = self.get_excel_files()
-            print(f"检测到 {len(excel_files)} 个Excel文件:")
-            for f in excel_files:
-                print(f"  - {f.name}")
+            print(f"有效文件数: {len(validation_result['valid_files'])}")
+            for f in validation_result['valid_files']:
+                print(f"  ✓ {f.name}")
             print(f"导入策略: {strategy}")
             print("="*60)
             
@@ -216,17 +305,29 @@ class ExcelCaseLoader:
             print("="*60 + "\n")
             return True
         
-        # 3. 交互式模式
-        if not self.prompt_user_for_import():
-            return True
+        # 4. 交互式模式
+        print("\n" + "="*60)
+        print("检测到有效的Excel用例文件:")
+        for f in validation_result['valid_files']:
+            print(f"  ✓ {f.name}")
         
-        # 4. 选择导入策略
+        try:
+            choice = input("\n是否导入Excel用例到YAML? (y/n, 默认y): ").strip().lower()
+            
+            if choice == 'n':
+                print("跳过Excel导入")
+                print("="*60 + "\n")
+                return True
+        except (EOFError, OSError):
+            print("\n检测到非交互式环境，自动导入Excel用例...")
+        
+        # 5. 选择导入策略
         strategy = self.select_import_strategy()
         
-        # 5. 执行导入
+        # 6. 执行导入
         result = self.import_excel_cases(strategy)
         
-        # 6. 处理导入结果
+        # 7. 处理导入结果
         if not result['success']:
             if not self.handle_import_failure():
                 return False

@@ -351,20 +351,6 @@ class ExcelJsonChecker:
                 print("[WARNING] 但有一些警告信息，建议查看")
         else:
             print("[FAIL] 发现问题，请根据上述错误信息修复Excel文件")
-            print("\n[数据格式规则]")
-            print("   【JSON 格式】 (application/json)")
-            print("   - 所有键和字符串值必须用双引号 \"")
-            print("   - 键值对之间用冒号 :，多个用逗号 , 分隔")
-            print("   - 示例: {\"username\": \"test\", \"age\": 25}")
-            print("\n   【Form/Multipart 格式】 (application/x-www-form-urlencoded, multipart/form-data)")
-            print("   - request_data 仍需用 JSON 格式表示")
-            print("   - 框架会自动将 JSON 转换为对应格式")
-            print("   - 示例: {\"username\": \"test\", \"file\": \"test.txt\"}")
-            print("\n   【XML/Text 格式】 (application/xml, text/plain)")
-            print("   - 可以是 JSON 格式或纯字符串")
-            print("   - 如果是字典，建议用 JSON 表示")
-            print("\n   【headers 和 expected_response】")
-            print("   - 必须是有效的 JSON 格式")
         
         print("=" * 80)
         

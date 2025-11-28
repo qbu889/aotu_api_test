@@ -11,6 +11,9 @@ def clean_json(raw_json_str):
     返回:
         清理后的JSON字符串
     """
+    # 清理非法控制字符
+    raw_json_str = clean_control_characters(raw_json_str)
+
     # 解析JSON
     try:
         data = json.loads(raw_json_str)
@@ -50,6 +53,15 @@ def clean_json(raw_json_str):
     return json.dumps(data, ensure_ascii=False, indent=2)
 
 
+def clean_control_characters(text):
+    """
+    清理文本中的非法控制字符
+    """
+    # 使用正则表达式移除所有非法控制字符（保留常见空白字符）
+    cleaned_text = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', text)
+    return cleaned_text
+
+
 # 示例用法
 if __name__ == "__main__":
     # 原始JSON数据
@@ -63,3 +75,4 @@ if __name__ == "__main__":
     "cmdResult": "%%/1933920621/DSP CELL:;%%\r\nRETCODE = 0  执行成功\r\n\r\n查询小区动态参数\r\n----------------\r\n                        本地小区标识  =  1\r\n                            小区名称  =  南平延平上元-HHM-F9-64\r\n                      小区的实例状态  =  正常\r\n          最近一次小区状态变化的原因  =  小区建立成功\r\n      最近一次引起小区建立的操作时间  =  2025-10-30 23:27:40\r\n      最近一次引起小区建立的操作类型  =  小区健康检查\r\n      最近一次引起小区删除的操作时间  =  2025-10-30 23:27:37\r\n      最近一次引起小区删除的操作类型  =  小区建立失败\r\n                    小区节能减排状态  =  未启动\r\n                        符号关断状态  =  符号关断\r\n              高铁场景下干扰协同状态  =  未启动\r\n                    主基带处理板信息  =  0-0-3\r\n                        小区拓扑结构  =  基本模式\r\n                最大发射功率(0.1dBm)  =  460\r\n                        小区PLMN信息  =  460-00/460-15\r\n            小区从可用变为不可用时间  =  0000-00-00 00:00:00\r\n小区变为不可用前最后一次配置操作时间  =  0000-00-00 00:00:00\r\n(结果个数 = 1)\r\n\r\n小区使用的射频单元以及基带处理板信息\r\n------------------------------------\r\n基站标识  射频单元信息  发射通道号  接收通道号  服务基带处理板信息  工作状态  主控处理板信息  最大发射功率(0.1dBm)  小区发射通道功率偏置(0.1dB)  分布单元基站标识\r\n\r\n145010    0-90-0        R0A-R0B     R0A-R0B     0-0-3               正常      0-0-7           460                   65535                        -               \r\n(结果个数 = 1)\r\n\r\n\r\n---    END\r\n\r\n",
     "enodeb_id": "460-00-145010"
 }'''
+    print(clean_json(raw_json))

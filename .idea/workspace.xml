@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02c9ec77-3e16-402c-b97a-1e0de5e51f95" name="更改" comment="测试结果">
+    <list default="true" id="02c9ec77-3e16-402c-b97a-1e0de5e51f95" name="更改" comment="feat(utils): 添加JSON数据清理和事件数据处理工具- 新增 clean_json.py 文件，用于清理JSON中的制表符、冗余符号和无意义标记- 实现 parserResult 字段中的制表符替换为冒号的功能&#10;- 对 cmdResult 字段进行多项清理操作，包括移除命令标记、结果个数标记、分隔线和END标记&#10;- 统一换行符格式并合并多余空行，去除字符串首尾空白&#10;- 新增 cleanEvent.py 文件，用于处理事件时间和FP值数据&#10;- 实现日期格式转换功能，将斜杠分隔的日期改为短横线分隔&#10;- 确保月份和日期为两位数格式，并构建标准的目标数据结构&#10;- 支持生成包含ACTIVE_STATUS、EVENT_TIME及FP相关字段的标准化JSON输出">
+      <change afterPath="$PROJECT_DIR$/api/call_api.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/base/BaseAPITest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resource/遗留库查询.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/Others/jsonToExcel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/timingSchedule /总体视图管控导出.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/timingSchedule /总体视图管控导出bata2.0.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TestCase/API/test_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/TestCase/API/test_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/assertion.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/assertion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/test_cases.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/data/test_cases.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/Others/cleanEvent.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/Others/cleanEvent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/Others/clean_json.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/Others/clean_json.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,20 +29,25 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="test" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "qbu889"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;qbu889&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:/qbu889/aotu_api_test.git",
-    "accountId": "09c92d07-a86d-4f2e-acff-ac193fa6dbe0"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:/qbu889/aotu_api_test.git&quot;,
+    &quot;accountId&quot;: &quot;09c92d07-a86d-4f2e-acff-ac193fa6dbe0&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -52,17 +63,35 @@
     "Python 测试.Python 测试 (test_api.py 内).executor": "Run",
     "Python 测试.test_api.test_create_user 的 Python 测试.executor": "Run",
     "Python.DataGenerator.executor": "Run",
+    "Python.call_api.executor": "Run",
+    "Python.check_excel_json.executor": "Run",
+    "Python.claenData.executor": "Run",
+    "Python.cleanEvent.executor": "Run",
+    "Python.clean_json.executor": "Run",
+    "Python.jsonToExcel.executor": "Run",
     "Python.request.executor": "Debug",
     "Python.run.executor": "Run",
+    "Python.teamview.executor": "Run",
     "Python.yaml_utils.executor": "Run",
+    "Python.总体视图管控导出.executor": "Run",
+    "Python.总体视图管控导出bata2.0.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master"
+    "git-widget-placeholder": "test",
+    "last_opened_file_path": "/Users/linziwang/PycharmProjects/aotu_api_test/utils/timingSchedule ",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
-  <component name="RunManager" selected="Python.run">
-    <configuration name="DataGenerator" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/utils/timingSchedule " />
+      <recent name="$PROJECT_DIR$/resource" />
+      <recent name="$PROJECT_DIR$/utils/Others" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.总体视图管控导出">
+    <configuration name="总体视图管控导出" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aotu_api_test" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -71,11 +100,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils/timingSchedule " />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/DataGenerator.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/timingSchedule /总体视图管控导出.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -84,7 +113,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="总体视图管控导出bata2.0" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aotu_api_test" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -93,11 +122,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils/timingSchedule " />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/run.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/timingSchedule /总体视图管控导出bata2.0.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -106,7 +135,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="yaml_utils" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="call_api" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aotu_api_test" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -115,11 +144,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/api" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/yaml_utils.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/api/call_api.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -128,43 +157,57 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python 测试 (test_api.py 内)" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="cleanEvent" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aotu_api_test" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/TestCase/API" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils/Others" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/TestCase/API/test_api.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/Others/cleanEvent.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="test_api.test_create_user 的 Python 测试" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="clean_json" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="aotu_api_test" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/TestCase/API" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils/Others" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_api.test_create_user&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/Others/clean_json.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.run" />
-        <item itemvalue="Python 测试.test_api.test_create_user 的 Python 测试" />
-        <item itemvalue="Python 测试.Python 测试 (test_api.py 内)" />
-        <item itemvalue="Python.yaml_utils" />
-        <item itemvalue="Python.DataGenerator" />
+        <item itemvalue="Python.总体视图管控导出" />
+        <item itemvalue="Python.总体视图管控导出bata2.0" />
+        <item itemvalue="Python.clean_json" />
+        <item itemvalue="Python.cleanEvent" />
+        <item itemvalue="Python.call_api" />
       </list>
     </recent_temporary>
   </component>
@@ -199,22 +242,58 @@
       <option name="project" value="LOCAL" />
       <updated>1756808954934</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="bata1.0 &#10;1. 封装基础请求的方法；&#10;2. 包含日志；&#10;3. 包含生成测试报告；&#10;4. 封装基础的断言方法；&#10;5. 读取Python中读取YAML数据拼接请求内容，调用基础的请求方法；&#10;6. 执行过程调用断言方法对返回结果内容/返回code进行断言；&#10;7. 最后生成测试报告。">
+      <option name="closed" value="true" />
+      <created>1756809748808</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1756809748808</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat(utils): 添加JSON数据清理和事件数据处理工具- 新增 clean_json.py 文件，用于清理JSON中的制表符、冗余符号和无意义标记- 实现 parserResult 字段中的制表符替换为冒号的功能&#10;- 对 cmdResult 字段进行多项清理操作，包括移除命令标记、结果个数标记、分隔线和END标记&#10;- 统一换行符格式并合并多余空行，去除字符串首尾空白&#10;- 新增 cleanEvent.py 文件，用于处理事件时间和FP值数据&#10;- 实现日期格式转换功能，将斜杠分隔的日期改为短横线分隔&#10;- 确保月份和日期为两位数格式，并构建标准的目标数据结构&#10;- 支持生成包含ACTIVE_STATUS、EVENT_TIME及FP相关字段的标准化JSON输出">
+      <option name="closed" value="true" />
+      <created>1762826137382</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1762826137382</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/test" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="第一个版本" />
     <MESSAGE value="测试结果" />
-    <option name="LAST_COMMIT_MESSAGE" value="测试结果" />
+    <MESSAGE value="bata1.0 &#10;1. 封装基础请求的方法；&#10;2. 包含日志；&#10;3. 包含生成测试报告；&#10;4. 封装基础的断言方法；&#10;5. 读取Python中读取YAML数据拼接请求内容，调用基础的请求方法；&#10;6. 执行过程调用断言方法对返回结果内容/返回code进行断言；&#10;7. 最后生成测试报告。" />
+    <MESSAGE value="feat(utils): 添加JSON数据清理和事件数据处理工具- 新增 clean_json.py 文件，用于清理JSON中的制表符、冗余符号和无意义标记- 实现 parserResult 字段中的制表符替换为冒号的功能&#10;- 对 cmdResult 字段进行多项清理操作，包括移除命令标记、结果个数标记、分隔线和END标记&#10;- 统一换行符格式并合并多余空行，去除字符串首尾空白&#10;- 新增 cleanEvent.py 文件，用于处理事件时间和FP值数据&#10;- 实现日期格式转换功能，将斜杠分隔的日期改为短横线分隔&#10;- 确保月份和日期为两位数格式，并构建标准的目标数据结构&#10;- 支持生成包含ACTIVE_STATUS、EVENT_TIME及FP相关字段的标准化JSON输出" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(utils): 添加JSON数据清理和事件数据处理工具- 新增 clean_json.py 文件，用于清理JSON中的制表符、冗余符号和无意义标记- 实现 parserResult 字段中的制表符替换为冒号的功能&#10;- 对 cmdResult 字段进行多项清理操作，包括移除命令标记、结果个数标记、分隔线和END标记&#10;- 统一换行符格式并合并多余空行，去除字符串首尾空白&#10;- 新增 cleanEvent.py 文件，用于处理事件时间和FP值数据&#10;- 实现日期格式转换功能，将斜杠分隔的日期改为短横线分隔&#10;- 确保月份和日期为两位数格式，并构建标准的目标数据结构&#10;- 支持生成包含ACTIVE_STATUS、EVENT_TIME及FP相关字段的标准化JSON输出" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>8</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/base/assertion.py</url>
           <line>53</line>
